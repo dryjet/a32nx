@@ -22,6 +22,9 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
                 this._registered = true;
             });
         });
+		Include.addScript("/JS/debug.js", function () {
+			g_modDebugMgr.AddConsole(null);
+		});
     }
     Init() {
         super.Init();
