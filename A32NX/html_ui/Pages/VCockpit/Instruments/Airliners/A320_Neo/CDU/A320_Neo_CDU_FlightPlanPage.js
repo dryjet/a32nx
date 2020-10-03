@@ -256,8 +256,9 @@ class CDUFlightPlanPage {
                                 altitudeConstraint = "FL" + mcdu.cruiseFlightLevel;
                             }
                         }
-                        if (altitudeConstraint === lastAltitudeConstraint) {
-                            altitudeConstraint = "  \"  ";
+                        if (altitudeConstraint === lastAltitudeConstraint || altitudeConstraint === "---") {
+                            //altitudeConstraint = "  \"  ";
+							altitudeConstraint = lastAltitudeConstraint;
                         }
                         else {
                             lastAltitudeConstraint = altitudeConstraint;
@@ -270,7 +271,8 @@ class CDUFlightPlanPage {
                             color = "green";
                         }
                         rows[2 * i + 1] = [waypoint.ident + "[color]" + color, speedConstraint + "/" + altitudeConstraint + "[s-text][color]" + color, timeCell + "[color]" + color];
-                        if (fpIndex !== -42) {
+                        //if (fpIndex !== -42) {
+						if(true) {
                             mcdu.onLeftInput[i] = async () => {
                                 let value = mcdu.inOut;
                                 mcdu.clearUserInput();
@@ -327,19 +329,38 @@ class CDUFlightPlanPage {
             while (mcdu.currentFlightPlanWaypointIndex >= wpCount) {
                 mcdu.currentFlightPlanWaypointIndex -= wpCount;
             }
-        }
-        mcdu.setTemplate([
-            ["FROM " + originIdentCell],
-            ...rows
-        ]);
-        mcdu.onDown = () => {
-            offset = Math.max(offset - 1, 0);
-            CDUFlightPlanPage.ShowPage(mcdu, offset);
-        };
-        mcdu.onUp = () => {
-            offset++;
-            CDUFlightPlanPage.ShowPage(mcdu, offset);
-        };
+			mcdu.setTemplate([
+				["FROM " + originIdentCell],
+				...rows
+			]);
+			mcdu.onDown = () => {
+				offset = Math.max(offset - 1, 0);
+				CDUFlightPlanPage.ShowPage(mcdu, offset);
+			};
+			mcdu.onUp = () => {
+				offset++;
+				CDUFlightPlanPage.ShowPage(mcdu, offset);
+			};
+        } else {
+            rows = [
+                ["", "SPD/ALT", "TIME"],
+                ["PPOS", "---/ ---", "----"],
+                [""],
+                [""],
+                [""],
+                [""],
+                ["--LOADING - PLEASE WAIT--[color]red"],
+                [""],
+                [""],
+                [""],
+                ["DEST", "DIST EFOB", "TIME"],
+                ["------", "---- ----", "----"]
+            ];
+			mcdu.setTemplate([
+				["FROM " + originIdentCell],
+				...rows
+			]);
+		}
     }
 }
 CDUFlightPlanPage._timer = 0;
